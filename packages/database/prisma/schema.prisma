@@ -1,0 +1,135 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PermissionMode {
+  DISABLED
+  READ_ONLY
+  AI_ENABLED
+}
+
+enum MsgDirection {
+  INCOMING
+  OUTGOING
+}
+
+enum ExecStatus {
+  IGNORED
+  STORED
+  PROCESSED
+  FAILED
+}
+
+enum RemStatus {
+  PENDING
+  TRIGGERED
+  COMPLETED
+  CANCELLED
+}
+
+model ChatPermission {
+  id           String         @id // WhatsApp JID (e.g. 12345@s.whatsapp.net or group jid)
+  name         String
+  alias        String?
+  profilePic   String?
+  mode         PermissionMode @default(DISABLED)
+  introSentAt  DateTime?
+  lastActivity DateTime       @default(now()) @updatedAt
+  unreadCount  Int            @default(0)
+  isGroup      Boolean        @default(false)
+  messages     MessageLog[]
+  reminders    Reminder[]
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([mode])
+}
+
+model MessageLog {
+  id              String         @id @default(uuid())
+  whatsappMsgId   String
+  chatId          String
+  senderJid       String
+  senderName      String
+  direction       MsgDirection
+  content         String
+  intentDetected  String?
+  priority        String         @default("NORMAL") // NORMAL, HIGH
+  executionStatus ExecStatus     @default(STORED)
+
+  chat            ChatPermission @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  createdAt       DateTime       @default(now())
+
+  @@index([chatId])
+  @@index([createdAt])
+}
+
+model Reminder {
+  id            String         @id @default(uuid())
+  chatId        String
+  title         String
+  messageToSend String
+  scheduledAt   DateTime
+  recurrence    String?        // ONCE, DAILY, WEEKLY, MONTHLY, YEARLY or CRON
+  offsetMinutes Int            @default(0)
+  status        RemStatus      @default(PENDING)
+
+  chat          ChatPermission @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([status, scheduledAt])
+  @@index([chatId])
+}
+
+model MemoryFact {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  category  String   @default("General")
+  value     String
+  encrypted Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@index([category])
+}
+
+model VaultItem {
+  id                String   @id @default(uuid())
+  title             String
+  username          String?
+  encryptedPassword String
+  category          String?  @default("General")
+  notes             String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([title])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  eventType String
+  details   String
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  id                   String   @id @default("default")
+  masterEnabled        Boolean  @default(true)
+  sessionWindowMinutes Int      @default(2)
+  updatedAt            DateTime @updatedAt
+}

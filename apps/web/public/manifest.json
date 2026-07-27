@@ -1,0 +1,18 @@
+{
+  "name": "Nox WhatsApp Assistant",
+  "short_name": "Nox PWA",
+  "description": "Personal WhatsApp AI Assistant Control Dashboard",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#111827",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

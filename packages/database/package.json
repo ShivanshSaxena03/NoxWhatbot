@@ -1,0 +1,25 @@
+{
+  "name": "@jarvis/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "dotenv -e ../../.env -- prisma generate && tsc",
+    "dev": "tsc --watch",
+    "db:generate": "dotenv -e ../../.env -- prisma generate",
+    "db:push": "dotenv -e ../../.env -- prisma db push",
+    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "db:studio": "dotenv -e ../../.env -- prisma studio"
+  },
+  "dependencies": {
+    "@jarvis/security": "1.0.0",
+    "@jarvis/shared": "1.0.0",
+    "@prisma/client": "^5.10.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "prisma": "^5.10.2",
+    "typescript": "^5.3.3"
+  }
+}
