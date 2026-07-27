@@ -11,7 +11,7 @@ import { createWorkerServer } from "./server";
 
 async function main() {
   console.log("=================================================");
-  console.log("  JARVIS WHATSAPP AI ASSISTANT - WORKER SERVER   ");
+  console.log("    NOX WHATSAPP AI ASSISTANT - WORKER SERVER    ");
   console.log("=================================================");
 
   // 1. Initialize WhatsApp Client
@@ -32,10 +32,11 @@ async function main() {
 
   // 4. Start Express & Socket.io HTTP Server IMMEDIATELY so dashboard connects instantly
   const server = createWorkerServer(waClient, scheduler);
-  const PORT = parseInt(process.env.SERVER_PORT || process.env.PORT || "3001", 10);
+  // Render.com injects PORT automatically — always use it. Fall back to 3001 locally.
+  const PORT = parseInt(process.env.PORT || process.env.SERVER_PORT || "3001", 10);
 
-  server.listen(PORT, () => {
-    console.log(`[Jarvis Server]: Backend API & Socket.io listening on http://localhost:${PORT}`);
+  server.listen(PORT, "0.0.0.0", () => {
+    console.log(`[Nox Server]: Backend API & Socket.io listening on http://0.0.0.0:${PORT}`);
   });
 
   // 5. Initialize WhatsApp Connection asynchronously in background (Non-blocking)
