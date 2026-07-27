@@ -68,19 +68,15 @@ export default function DashboardPage() {
 
     const socket = getSocket();
 
-    socket.on("whatsapp_state", (newState: any) => {
+    const onWaState = (newState: any) => {
       setWaState(newState);
       if (newState.qrCode) setQrCode(newState.qrCode);
-    });
-
-    socket.on("whatsapp_qr", (newQr: string) => {
+    };
+    const onWaQr = (newQr: string) => {
       setQrCode(newQr);
-    });
-
-    socket.on("important_message_received", (newMsg: any) => {
-      // Exclude Jarvis outgoing messages from real-time urgent log state
+    };
+    const onImportantMsg = (newMsg: any) => {
       if (newMsg.senderName === "Jarvis" || newMsg.chatId === "jarvis_assistant") return;
-
       console.log("[Dashboard]: Real-time incoming important message received:", newMsg);
       setUrgentLogs((prev) => [
         {
@@ -92,15 +88,22 @@ export default function DashboardPage() {
         },
         ...prev
       ]);
-    });
+    };
 
-    socket.on("chat_updated", () => loadAllData());
-    socket.on("chat_deleted", () => loadAllData());
+    socket.on("whatsapp_state", onWaState);
+    socket.on("whatsapp_qr", onWaQr);
+    socket.on("important_message_received", onImportantMsg);
+    socket.on("chat_updated", loadAllData);
+    socket.on("chat_deleted", loadAllData);
 
     const interval = setInterval(loadAllData, 3000);
 
     return () => {
-      socket.disconnect();
+      socket.off("whatsapp_state", onWaState);
+      socket.off("whatsapp_qr", onWaQr);
+      socket.off("important_message_received", onImportantMsg);
+      socket.off("chat_updated", loadAllData);
+      socket.off("chat_deleted", loadAllData);
       clearInterval(interval);
     };
   }, []);

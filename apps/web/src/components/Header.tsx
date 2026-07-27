@@ -26,16 +26,18 @@ export default function Header() {
 
     const socket = getSocket();
 
-    socket.on("whatsapp_state", (state: any) => {
+    const onState = (state: any) => {
       if (state) {
         setStatus(state.status);
         if (state.phoneNumber) setPhone(state.phoneNumber);
       }
-    });
+    };
+
+    socket.on("whatsapp_state", onState);
 
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
-      socket.disconnect();
+      socket.off("whatsapp_state", onState);
     };
   }, []);
 

@@ -14,14 +14,15 @@ export default function MasterToggle() {
       .catch(() => {});
 
     const socket = getSocket();
-    socket.on("master_setting_updated", (data: any) => {
+    const onMasterUpdate = (data: any) => {
       if (data && typeof data.masterEnabled === "boolean") {
         setEnabled(data.masterEnabled);
       }
-    });
+    };
+    socket.on("master_setting_updated", onMasterUpdate);
 
     return () => {
-      socket.disconnect();
+      socket.off("master_setting_updated", onMasterUpdate);
     };
   }, []);
 

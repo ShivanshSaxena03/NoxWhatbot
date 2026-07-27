@@ -25,7 +25,7 @@ export default function VerificationModal() {
   useEffect(() => {
     const socket = getSocket();
 
-    socket.on("ai_verification_request", (payload: VerificationPayload) => {
+    const onVerificationRequest = (payload: VerificationPayload) => {
       console.log("[PWA Modal]: New verification request received:", payload);
       setRequests((prev) => [...prev, payload]);
 
@@ -36,18 +36,23 @@ export default function VerificationModal() {
 
         new Notification(notifTitle, {
           body: `"${payload.incomingMessage.substring(0, 60)}" - Tap to verify reply`,
-          icon: "/icon-192.png",
+          icon: "/icon.svg",
           requireInteraction: true
         });
       }
-    });
+    };
 
-    socket.on("ai_verification_resolved", (data: { requestId: string }) => {
+    const onVerificationResolved = (data: { requestId: string }) => {
       setRequests((prev) => prev.filter((r) => r.requestId !== data.requestId));
-    });
+    };
 
+    socket.on("ai_verification_request", onVerificationRequest);
+    socket.on("ai_verification_resolved", onVerificationResolved);
+
+    // Cleanup: only remove these specific listeners — do NOT disconnect the shared socket
     return () => {
-      socket.disconnect();
+      socket.off("ai_verification_request", onVerificationRequest);
+      socket.off("ai_verification_resolved", onVerificationResolved);
     };
   }, []);
 

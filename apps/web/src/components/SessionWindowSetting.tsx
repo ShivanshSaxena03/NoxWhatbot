@@ -26,14 +26,15 @@ export default function SessionWindowSetting() {
       .catch(() => {});
 
     const socket = getSocket();
-    socket.on("session_window_updated", (data: any) => {
+    const onSessionUpdate = (data: any) => {
       if (data && typeof data.minutes === "number") {
         setMinutes(data.minutes);
       }
-    });
+    };
+    socket.on("session_window_updated", onSessionUpdate);
 
     return () => {
-      socket.disconnect();
+      socket.off("session_window_updated", onSessionUpdate);
     };
   }, []);
 

@@ -8,7 +8,7 @@ export default function NotificationManager() {
   const [permission, setPermission] = useState<NotificationPermission>("default");
 
   useEffect(() => {
-    // 1. Register Service Worker for PWA
+    // Register Service Worker for PWA
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
@@ -21,18 +21,20 @@ export default function NotificationManager() {
     }
 
     const socket = getSocket();
-
-    socket.on("whatsapp_state", (state: any) => {
+    const onState = (state: any) => {
       if (state && state.status === "CONNECTED" && Notification.permission === "granted") {
         new Notification("Nox WhatsApp Online", {
           body: `Connected as ${state.pushName || state.phoneNumber || "WhatsApp"}`,
           icon: "/icon.svg"
         });
       }
-    });
+    };
 
+    socket.on("whatsapp_state", onState);
+
+    // Cleanup only removes the specific listener — does NOT disconnect the shared socket
     return () => {
-      socket.disconnect();
+      socket.off("whatsapp_state", onState);
     };
   }, []);
 
@@ -42,9 +44,9 @@ export default function NotificationManager() {
       return;
     }
 
-    const res = await (Notification.permission === "granted"
+    const res = Notification.permission === "granted"
       ? "granted"
-      : await Notification.requestPermission());
+      : await Notification.requestPermission();
 
     setPermission(res);
 

@@ -18,9 +18,9 @@ export default function ImportantToast() {
   useEffect(() => {
     const socket = getSocket();
 
-    socket.on("important_message_received", (payload: ImportantMessageToastPayload) => {
+    const onImportantMsg = (payload: ImportantMessageToastPayload) => {
       console.log("[Toast Notification]: New important message received:", payload);
-      
+
       setToasts((prev) => [payload, ...prev]);
 
       // Native browser PWA push notification
@@ -36,10 +36,13 @@ export default function ImportantToast() {
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.requestId !== payload.requestId));
       }, 7000);
-    });
+    };
 
+    socket.on("important_message_received", onImportantMsg);
+
+    // Cleanup: only remove this specific listener — do NOT disconnect the shared socket
     return () => {
-      socket.disconnect();
+      socket.off("important_message_received", onImportantMsg);
     };
   }, []);
 
@@ -62,7 +65,7 @@ export default function ImportantToast() {
             </div>
             <div className="space-y-0.5">
               <div className="text-xs font-bold text-gray-900">
-                "{toast.incomingMessage}"
+                &ldquo;{toast.incomingMessage}&rdquo;
               </div>
               <p className="text-[11px] text-gray-600 font-medium">
                 sent as IMP by <span className="font-semibold text-gray-900">{toast.senderName}</span>
