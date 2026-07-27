@@ -12,7 +12,17 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "composite": true,
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@jarvis/shared": ["packages/shared/src/index.ts"],
+      "@jarvis/security": ["packages/security/src/index.ts"],
+      "@jarvis/database": ["packages/database/src/index.ts"],
+      "@jarvis/ai": ["packages/ai/src/index.ts"],
+      "@jarvis/reminders": ["packages/reminders/src/index.ts"],
+      "@jarvis/whatsapp": ["packages/whatsapp/src/index.ts"],
+      "@jarvis/workers": ["packages/workers/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "dist", ".next"]
 }

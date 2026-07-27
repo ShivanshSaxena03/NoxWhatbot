@@ -11,13 +11,14 @@
     "dev": "concurrently \"npm run dev:database\" \"npm run dev:web\" \"npm run dev:server\"",
     "dev:web": "npm run dev --workspace=apps/web",
     "dev:server": "npm run dev --workspace=packages/workers",
-    "dev:database": "npm run db:generate --workspace=packages/database",
+    "dev:database": "npm run db:generate:local --workspace=packages/database",
     "build": "npm run build --workspace=packages/shared && npm run build --workspace=packages/security && npm run build --workspace=packages/database && npm run build --workspace=packages/ai && npm run build --workspace=packages/reminders && npm run build --workspace=packages/whatsapp && npm run build --workspace=packages/workers && npm run build --workspace=apps/web",
+    "build:backend": "npm run build --workspace=packages/shared && npm run build --workspace=packages/security && npm run build --workspace=packages/database && npm run build --workspace=packages/ai && npm run build --workspace=packages/reminders && npm run build --workspace=packages/whatsapp && npm run build --workspace=packages/workers",
     "start": "node packages/workers/dist/index.js",
-    "db:generate": "npm run db:generate --workspace=packages/database",
-    "db:push": "npm run db:push --workspace=packages/database",
-    "db:migrate": "npm run db:migrate --workspace=packages/database",
-    "db:studio": "npm run db:studio --workspace=packages/database"
+    "db:generate": "npm run db:generate:local --workspace=packages/database",
+    "db:push": "npm run db:push:local --workspace=packages/database",
+    "db:migrate": "npm run db:migrate:local --workspace=packages/database",
+    "db:studio": "dotenv -e .env -- prisma studio --schema=packages/database/prisma/schema.prisma"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

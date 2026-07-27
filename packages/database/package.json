@@ -5,12 +5,16 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "dotenv -e ../../.env -- prisma generate && tsc",
+    "build": "prisma generate && tsc",
     "dev": "tsc --watch",
-    "db:generate": "dotenv -e ../../.env -- prisma generate",
-    "db:push": "dotenv -e ../../.env -- prisma db push",
-    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
-    "db:studio": "dotenv -e ../../.env -- prisma studio"
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "build:local": "dotenv -e ../../.env -- prisma generate && tsc",
+    "db:generate:local": "dotenv -e ../../.env -- prisma generate",
+    "db:push:local": "dotenv -e ../../.env -- prisma db push",
+    "db:migrate:local": "dotenv -e ../../.env -- prisma migrate dev"
   },
   "dependencies": {
     "@jarvis/security": "1.0.0",
