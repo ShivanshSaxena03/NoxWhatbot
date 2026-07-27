@@ -27,7 +27,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     setError(null);
     setLoading(true);
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
+    const { protocol, hostname } = window.location;
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || `${protocol}//${hostname}:3001`;
+
 
     try {
       const res = await fetch(`${API_BASE}/api/auth/login`, {

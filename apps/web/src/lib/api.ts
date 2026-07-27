@@ -1,6 +1,22 @@
 import { io, Socket } from "socket.io-client";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001";
+// Dynamically resolve API base from the browser's host so it works from any
+// device on the network (phone, tablet, etc.) without extra env config.
+// Falls back to NEXT_PUBLIC_API_BASE env var if explicitly set.
+function getApiBase(): string {
+  if (process.env.NEXT_PUBLIC_API_BASE) {
+    return process.env.NEXT_PUBLIC_API_BASE;
+  }
+  if (typeof window !== "undefined") {
+    // Use the same hostname the browser used to reach the dashboard,
+    // but always point to the backend port (3001).
+    const { protocol, hostname } = window.location;
+    return `${protocol}//${hostname}:3001`;
+  }
+  return "http://localhost:3001";
+}
+
+const API_BASE = getApiBase();
 
 let socketInstance: Socket | null = null;
 
