@@ -2,16 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@jarvis/shared": ["../shared/src/index.ts"],
-      "@jarvis/database": ["../database/src/index.ts"]
-    }
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../shared" },
-    { "path": "../database" }
-  ]
+  "include": ["src/**/*"]
 }

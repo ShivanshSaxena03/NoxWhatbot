@@ -5,24 +5,11 @@
     "moduleResolution": "NodeNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "composite": true,
-    "incremental": true,
-    "baseUrl": ".",
-    "paths": {
-      "@jarvis/shared": ["packages/shared/src/index.ts"],
-      "@jarvis/security": ["packages/security/src/index.ts"],
-      "@jarvis/database": ["packages/database/src/index.ts"],
-      "@jarvis/ai": ["packages/ai/src/index.ts"],
-      "@jarvis/reminders": ["packages/reminders/src/index.ts"],
-      "@jarvis/whatsapp": ["packages/whatsapp/src/index.ts"],
-      "@jarvis/workers": ["packages/workers/src/index.ts"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": ["node_modules", "dist", ".next"]
 }

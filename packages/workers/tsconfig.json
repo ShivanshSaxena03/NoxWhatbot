@@ -2,24 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@jarvis/shared": ["../shared/src/index.ts"],
-      "@jarvis/security": ["../security/src/index.ts"],
-      "@jarvis/database": ["../database/src/index.ts"],
-      "@jarvis/ai": ["../ai/src/index.ts"],
-      "@jarvis/reminders": ["../reminders/src/index.ts"],
-      "@jarvis/whatsapp": ["../whatsapp/src/index.ts"]
-    }
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../shared" },
-    { "path": "../security" },
-    { "path": "../database" },
-    { "path": "../ai" },
-    { "path": "../reminders" },
-    { "path": "../whatsapp" }
-  ]
+  "include": ["src/**/*"]
 }
